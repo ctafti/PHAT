@@ -1,0 +1,155 @@
+# =============================================================================
+# PHAT Configuration File
+# Patent Prosecution History Analysis Tool v2.0
+# =============================================================================
+
+# AI Provider Configuration
+# Supported providers: "claude", "gemini", "deepseek"
+ai_provider: "deepseek"
+
+# Model mode: "full" | "fast" | "custom"
+model_mode: "full"
+
+# API Keys (replace with your own)
+api_keys:
+  claude: "YOUR_CLAUDE_API_KEY"
+  gemini: "Gemini API Key"
+  deepseek: "Deepseek API Key"
+
+# Model definitions per provider
+models:
+  claude:
+    default: "claude-sonnet-4-5-20250929"
+    fast: "claude-haiku-4-5-20251001"
+  gemini:
+    default: "gemini-2.5-pro"
+    fast: "gemini-2.5-flash"
+  deepseek:
+    default: "deepseek-reasoner"
+    fast: "deepseek-chat"
+
+# =============================================================================
+# CUSTOM MODEL ASSIGNMENTS (used when model_mode: "custom")
+# =============================================================================
+custom_model_assignments:
+  triage: "fast"
+  claims_extraction: "fast"
+  rejection_analysis: "full"
+  amendment_analysis: "full"          # CRITICAL - always use best
+  argument_extraction: "full"
+  restriction_analysis: "fast"
+  allowance_analysis: "fast"
+  interview_analysis: "full"
+  terminal_disclaimer: "fast"
+  means_plus_function: "full"
+  document_classification: "fast"
+  generic_analysis: "full"
+  # Post-processing tasks (Layer 2/3)
+  shadow_examiner: "full"            # Needs deep legal reasoning
+  definition_synthesis: "full"       # Needs nuanced consistency analysis
+  claim_narrative: "fast"            # Simpler summarization task
+  strategic_tensions: "full"         # Deep cross-reference analysis
+  thematic_synthesis: "full"         # Improvement A: Needs deep thematic reasoning
+  term_boundaries: "full"            # Nuanced scope boundary analysis
+  vulnerability_cards: "full"        # Deep litigation reasoning
+
+# =============================================================================
+# POST-PROCESSING (Layer 2/3 Synthesis & Critique)
+# =============================================================================
+post_processing:
+  enabled: true
+  # Individual task toggles
+  shadow_examiner: true
+  definition_synthesis: true
+  claim_narratives: true
+  strategic_tensions: true              # Detect contradictions in prosecution positions
+  thematic_synthesis: true              # Improvement A: Group arguments into Themes of Patentability
+  term_boundaries: true                 # Extract actionable scope boundaries per term
+  prior_art_consolidation: true         # Consolidate scattered prior art into structured refs
+  claim_type_classification: true       # Classify claims as Method/System/CRM/etc.
+  vulnerability_cards: true             # Per-claim vulnerability cards for litigation
+  # Shadow Examiner: minimum severity to include in report ("High", "Medium", "Low")
+  shadow_examiner_min_severity: "Medium"
+  # Definition Synthesis: min statements per term to trigger synthesis (saves tokens)
+  synthesis_min_statements: 1
+  # Claim Narratives: max independent claims to narrate
+  max_claim_narratives: 20
+
+# =============================================================================
+# PDF PROCESSING
+# =============================================================================
+pdf:
+  # Primary segmentation strategy: "bookmarks" or "patterns"
+  primary_strategy: "bookmarks"
+
+# =============================================================================
+# PROCESSING SETTINGS
+# =============================================================================
+processing:
+  max_chunk_chars: 250000
+  chunk_overlap: 10000
+  temperature: 0.1
+  max_retries: 3
+  retry_delay: 2
+
+# =============================================================================
+# FILE PATHS
+# =============================================================================
+paths:
+  input_folder: "input"
+  output_folder: "output"
+  database: "output/phat_database.db"
+  templates: "templates"
+
+# =============================================================================
+# OCR CLEANING
+# =============================================================================
+ocr:
+  enabled: true
+  log_corrections: true
+
+# =============================================================================
+# QUOTE VERIFICATION (Hallucination Detection)
+# =============================================================================
+verification:
+  enabled: true
+  fuzzy_threshold: 0.95
+  partial_threshold: 0.6
+  min_quote_length: 10
+  downgrade_unverified_risk: true
+
+# =============================================================================
+# DOCUMENT TRIAGE
+# =============================================================================
+triage:
+  skip_types:
+    - "Fee Transmittal"
+    - "Power of Attorney"
+    - "Application Data Sheet"
+    - "Filing Receipt"
+    - "Administrative"
+    - "Drawings"
+    - "Transmittal"
+    - "Examiner Search"
+    - "Citation List"
+  high_priority:
+    - "Appeal Brief"
+    - "Reply Brief"
+    - "Notice of Allowance"
+    - "Statement of Reasons for Allowance"
+
+# =============================================================================
+# REPORT GENERATION
+# =============================================================================
+report:
+  format: "both"
+  include_full_claim_history: true
+  include_all_statements: true
+
+# =============================================================================
+# LOGGING
+# =============================================================================
+logging:
+  level: "INFO"
+  file: "output/phat.log"
+  verbose: true
